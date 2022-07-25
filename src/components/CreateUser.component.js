@@ -1,4 +1,5 @@
 import React,{Component} from "react";
+import axios from "axios";
 
 export default class CreateUserComponent extends Component{
 
@@ -20,10 +21,24 @@ export default class CreateUserComponent extends Component{
 
 
     onSubmit(e){
-       //prevent default entries
+      //prevent default
+        e.preventDefault();
+        //store user input in an object variable
+        const user = {
+            username: this.state.username
+        }
+        //for testing purposes
+        console.log(user);
+
+        //use axios for http request
+        axios.post('http://localhost:5000/users/add',user)
+            .then(res => console.log(res.data));
+
+        //set user input back to blank
         this.setState({
-            username: e.target.value
+            username: ''
         })
+
     }
 
 

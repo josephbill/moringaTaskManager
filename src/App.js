@@ -15,7 +15,9 @@ import {
 import Navbar from "./components/Navbar.component";
 import CreateUserComponent from "./components/CreateUser.component";
 import CreateTaskComponent from "./components/CreateTask.component";
-
+import TaskList from "./components/TaskList";
+import LandingPage from "./components/LandingPage";
+import LoadItems from "./components/LandingPage";
 
 
 function App() {
@@ -25,7 +27,8 @@ function App() {
             <div className="container">
                <Navbar/>
                 <Routes>
-                    {/*<Route exact path='/' element={< CreateUserComponent />}></Route>*/}
+                    <Route exact path='/' element={<LandingPage />}></Route>
+                    {/*<Route exact path='/' element={<TaskList />}></Route>*/}
                     <Route exact path='/task' element={< CreateTaskComponent />}></Route>
                     <Route exact path='/user' element={< CreateUserComponent />}></Route>
                 </Routes>

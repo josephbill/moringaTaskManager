@@ -1,5 +1,6 @@
 import React,{Component} from "react";
-import DatePicker from 'react-datepicker'
+import DatePicker from 'react-datepicker';
+import axios from "axios";
 
 export default class CreateTaskComponent extends Component{
 
@@ -10,36 +11,80 @@ export default class CreateTaskComponent extends Component{
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDuration = this.onChangeDuration.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
             username: '',
-            duration: '',
+            duration: 0,
             description: '',
+            date: new Date(),
             users:[]
         }
 
     }
 
-    onChangeDate(){
+    onChangeDate(e){
+        this.setState({
+            date: e.target.value
+        })
+    }
+
+    onSubmit(e){
+        e.preventDefault()
+        const taskObject = {
+            username: this.state.username,
+            description: this.state.description,
+            duration: this.state.duration,
+            date: this.state.date,
+        }
+
+        //use axios for http request
+        axios.post('http://localhost:5000/tasks/add',taskObject)
+            .then(res => console.log(res.data));
+
+        //set user input back to blank
+        this.setState({
+            username: '',
+            description: '',
+            duration: '',
+            date: '',
+        })
+
+        //redirect the user to view all tasks in homepage
+        window.location = '/';
 
     }
 
-    onSubmit(){
-
+    onChangeDescription(e){
+        this.setState({
+            description: e.target.value
+        })
     }
 
-    onChangeDescription(){
-
+    onChangeDuration(e){
+        this.setState({
+            duration: e.target.value
+        })
     }
 
-    onChangeDuration(){
-
+    onChangeUsername(e){
+       this.setState({
+           username: e.target.value
+       })
     }
 
-    onChangeUsername(){
-
+    componentDidMount() {
+        //fetch list
+        axios.get('http://localhost:5000/users/')
+            .then(response => {
+                if (response.data.length > 0){
+                    this.setState({
+                        users: response.data.map(users => users.username),
+                        username: response.data[0].username
+                    })
+                }
+            })
     }
-
 
 
     render(){
@@ -58,20 +103,18 @@ export default class CreateTaskComponent extends Component{
                             onChange={this.onChangeUsername}
                             >
 
-                                <option value="Joseph">Joseph</option>
-                                <option value="Bill">Bill</option>
 
-                            {/*    this data will come from db : options */}
-                            {/*    {*/}
-                            {/*        this.state.users.map(function(user){*/}
-                            {/*            return <option*/}
-                            {/*              key={user}*/}
-                            {/*            >*/}
-                            {/*                {user}*/}
-                            {/*                */}
-                            {/*            </option>*/}
-                            {/*        })*/}
-                            {/*    }*/}
+                                {/*this data will come from db : options */}
+                                {
+                                    this.state.users.map(function(user){
+                                        return <option
+                                          key={user}
+                                        >
+                                            {user}
+
+                                        </option>
+                                    })
+                                }
                             </select>
                         </div>
 
